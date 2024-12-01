@@ -13,10 +13,11 @@ def send_message_via_telegram(message):
     if response.status_code != 200:
         print(f"Failed to send message via Telegram: {response.text}")
 
-def send_startup_message(authorization_url, meeting_url):
+def send_startup_message(authorization_url, meeting_url, verify_url):
     message = (
         f"🚀 *OAuth Authorization Link:*\n[Authorize link]({authorization_url})\n\n"
-        f"📅 *Meeting Link:*\n[Meeting link]({meeting_url})"
+        f"📅 *Meeting Link:*\n[Meeting link]({meeting_url})\n\n"
+        f"✅ *Verification Link:*\n[Verify link]({verify_url})"
     )
     
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
