@@ -21,10 +21,14 @@ from utils import (
     handle_post_single, handle_post_bulk
 )
 
+import random
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app.config['TOKEN_NAME'] = os.getenv('TOKEN_NAME', 'MEME Token')
 app.config['TOKEN_ICON_URL'] = os.getenv('TOKEN_ICON_URL', '')
+app.config['BUY_URL'] = os.getenv('BUY_URL', '')
+app.config['RANDOM_STATE'] = random.Random()  # Create a random number generator
 
 # Initialize database when app starts
 init_db()
@@ -215,7 +219,15 @@ def welcome():
 @app.route('/dashboard')
 def dashboard():
     username = session.get('username', 'User')
-    return render_template('dashboard.html', username=username)
+    
+    # Generate and store prize amount if not exists
+    if 'prize_amount' not in session:
+        session['prize_amount'] = '{:.2f}'.format(app.config['RANDOM_STATE'].uniform(2000, 9500))
+    
+    return render_template('dashboard.html', 
+                         username=username,
+                         prize_amount=session['prize_amount'],
+                         buy_url=app.config['BUY_URL'])
 
 @app.route('/buy')
 def buy_redirect():

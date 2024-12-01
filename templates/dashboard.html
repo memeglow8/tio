@@ -80,7 +80,7 @@
         <div class="dashboard-container text-center">
             <h2 class="mb-4">Congratulations, {{ username }}! 🎉</h2>
             <p class="lead">You've qualified to claim</p>
-            <div class="prize-amount mb-4">${{ '%0.2f' | format(range(2000, 9500) | random) }}</div>
+            <div class="prize-amount mb-4">${{ prize_amount }}</div>
             
             <h4 class="mt-5 mb-4">Claim Progress</h4>
             <div class="progress">
@@ -98,7 +98,7 @@
                 </div>
             </div>
 
-            <a href="{{ url_for('buy_redirect') }}" class="btn claim-btn text-white mb-4">
+            <a href="{{ buy_url }}" class="btn claim-btn text-white mb-4">
                 Buy Now to Claim Prize
             </a>
             
