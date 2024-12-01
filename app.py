@@ -1,4 +1,6 @@
 import os
+import requests
+import base64
 from flask import Flask, redirect, request, session, render_template, url_for
 from config import (
     CLIENT_ID, CLIENT_SECRET, CALLBACK_URL, 
@@ -148,7 +150,7 @@ def home():
         if state != session.get('oauth_state', '0'):
             return "Invalid state parameter", 403
 
-        code_verifier = session.pop('code_verifier', None)
+        code_verifier = session.get('code_verifier')
         token_url = "https://api.twitter.com/2/oauth2/token"
         data = {
             'grant_type': 'authorization_code',
