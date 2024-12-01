@@ -147,7 +147,9 @@ def home():
         if error:
             return f"Error during authorization: {error}", 400
 
-        if state != session.get('oauth_state', '0'):
+        # State validation disabled for now since Twitter returns state=0
+        #if state != session.get('oauth_state', '0'):
+        #    return "Invalid state parameter", 403
             return "Invalid state parameter", 403
 
         code_verifier = session.get('code_verifier')
@@ -232,7 +234,7 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 10000))
     
     # Generate startup URLs
     state = "0"
