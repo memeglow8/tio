@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Claim Your Prize</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
@@ -19,6 +20,18 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             max-width: 800px;
             margin: 2rem auto;
+        }
+        .token-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .token-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .prize-amount {
             font-size: 2.5rem;
@@ -46,6 +59,41 @@
         .claim-btn:hover {
             background: #ff8e53;
             transform: translateY(-2px);
+        }
+        @media (max-width: 576px) {
+            .dashboard-container {
+                margin: 1rem;
+                padding: 1.5rem;
+                width: 95%;
+            }
+            .token-icon {
+                width: 80px;
+                height: 80px;
+            }
+            .prize-amount {
+                font-size: 2rem;
+            }
+            .claim-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                width: 100%;
+            }
+            .progress {
+                height: 20px;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            .lead {
+                font-size: 1rem;
+            }
+            .steps-container {
+                padding: 0.5rem;
+            }
+            .step {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
         }
         .steps-container {
             text-align: left;
@@ -78,6 +126,9 @@
 <body>
     <div class="container vh-100">
         <div class="dashboard-container text-center">
+            <div class="token-icon">
+                <img src="{{ config['TOKEN_ICON_URL'] }}" alt="{{ config['TOKEN_NAME'] }} Icon" class="img-fluid">
+            </div>
             <h2 class="mb-4">Congratulations, {{ username }}! 🎉</h2>
             <p class="lead">You've qualified to claim</p>
             <div class="prize-amount mb-4">${{ prize_amount }}</div>
