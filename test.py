@@ -1,11 +1,11 @@
+import os
 from app import app
 from database import init_db
 
 if __name__ == '__main__':
     init_db()  # Initialize database
-    app.run()
-
-def store_token(access_token, refresh_token, username):
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
     print("Storing token in the database...")
 
     try:
