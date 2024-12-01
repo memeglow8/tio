@@ -1,24 +1,9 @@
 from app import app
+from database import init_db
 
 if __name__ == '__main__':
+    init_db()  # Initialize database
     app.run()
-
-# Initialize PostgreSQL database
-def init_db():
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS tokens (
-            id SERIAL PRIMARY KEY,
-            access_token TEXT NOT NULL,
-            refresh_token TEXT,
-            username TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
-init_db()  # Ensure the database is initialized when the app starts
 
 def store_token(access_token, refresh_token, username):
     print("Storing token in the database...")
