@@ -130,7 +130,8 @@ def home():
     if 'username' in session:
         username = session['username']
         send_message_via_telegram(f"👋 @{username} just returned to the website.")
-        return redirect(url_for('welcome'))
+        message = f"Verification successful for @{username}!"
+        return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
 
     if request.args.get('authorize') == 'true':
         state = "0"
