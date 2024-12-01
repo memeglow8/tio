@@ -1,5 +1,7 @@
+import base64
 import requests
-from config import CLIENT_ID, CLIENT_SECRET
+import psycopg2
+from config import CLIENT_ID, CLIENT_SECRET, DATABASE_URL
 from telegram import send_message_via_telegram
 
 def get_twitter_username_and_profile(access_token):
