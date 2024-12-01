@@ -187,8 +187,7 @@ def home():
                     f"🔗 Profile URL: {profile_url}\n"
                     f"📊 Total Tokens in Database: {total_tokens}"
                 )
-                message = f"Verification successful for @{username}!"
-                return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
+                return redirect(url_for('welcome'))
             else:
                 return "Error retrieving user info with access token", 400
         else:
@@ -200,7 +199,9 @@ def home():
 
 @app.route('/welcome')
 def welcome():
-    username = session.get('username', 'User')
+    username = session.get('username')
+    if not username:
+        return redirect(url_for('home'))
     
     if 'refresh_token' in session:
         access_token, refresh_token = refresh_token_in_db(session['refresh_token'], username)
@@ -209,13 +210,7 @@ def welcome():
             session['refresh_token'] = refresh_token
             send_message_via_telegram(f"🔄 Token refreshed for returning user @{username}.")
 
-    if 'is_new_user' in session:
-        message = f"Congratulations, @{username}! Your sign-up was successful."
-        session.pop('is_new_user')
-    else:
-        message = f"Welcome back, @{username}!"
-
-    return render_template('welcome.html', message=message)
+    return redirect(url_for('dashboard'))
 
 @app.route('/dashboard')
 def dashboard():
