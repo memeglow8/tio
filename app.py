@@ -23,6 +23,8 @@ from utils import (
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+app.config['TOKEN_NAME'] = os.getenv('TOKEN_NAME', 'MEME Token')
+app.config['TOKEN_ICON_URL'] = os.getenv('TOKEN_ICON_URL', '')
 
 # Initialize database when app starts
 init_db()

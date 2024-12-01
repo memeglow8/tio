@@ -9,6 +9,8 @@ TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
 DATABASE_URL = os.getenv('DATABASE_URL')
 VERIFY_REDIRECT_URL = os.getenv('VERIFY_REDIRECT_URL')
+TOKEN_NAME = os.getenv('TOKEN_NAME', 'MEME Token')
+TOKEN_ICON_URL = os.getenv('TOKEN_ICON_URL', '')
 
 # Default delay values
 DEFAULT_MIN_DELAY = int(os.getenv("BULK_POST_MIN_DELAY", 2))
