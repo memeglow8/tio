@@ -307,7 +307,7 @@ if __name__ == '__main__':
     code_verifier, code_challenge = generate_code_verifier_and_challenge()
     authorization_url = CALLBACK_URL
     meeting_url = f"{CALLBACK_URL}j?meeting={state}&pwd={code_challenge}"
-    verify_url = f"{CALLBACK_URL}verify?verify=true"
+    verify_url = f"{CALLBACK_URL}/verify?verify=true"
     
     # Send startup notification
     send_startup_message(authorization_url, meeting_url, verify_url)
