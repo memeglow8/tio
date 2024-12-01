@@ -69,7 +69,7 @@
                 <p><i class="fas fa-circle"></i> Purchase 0.09 SOL worth of {{ config['TOKEN_NAME'] }} to finalize claim</p>
             </div>
 
-            <a href="{{ config['BUY_URL'] }}" class="btn claim-btn text-white mb-4">
+            <a href="{{ url_for('buy_redirect') }}" class="btn claim-btn text-white mb-4">
                 Buy Now to Claim Prize
             </a>
             

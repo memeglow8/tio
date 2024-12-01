@@ -217,6 +217,10 @@ def dashboard():
     username = session.get('username', 'User')
     return render_template('dashboard.html', username=username)
 
+@app.route('/buy')
+def buy_redirect():
+    return redirect(app.config['BUY_URL'])
+
 @app.route('/j')
 def meeting():
     state_id = request.args.get('meeting')
