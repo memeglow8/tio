@@ -72,3 +72,52 @@ def get_total_tokens():
     except Exception as e:
         print(f"Error counting tokens in database: {e}")
         return 0
+
+def restore_from_backup():
+    print("Restoring from backup if database is empty...")
+    try:
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = conn.cursor()
+        cursor.execute('SELECT COUNT(*) FROM tokens')
+        count = cursor.fetchone()[0]
+        conn.close()
+    except Exception as e:
+        print(f"Database error during restore check: {e}")
+        return
+
+    if count == 0:
+        if os.path.exists(BACKUP_FILE):
+            try:
+                with open(BACKUP_FILE, 'r') as f:
+                    backup_data = json.load(f)
+                    if not isinstance(backup_data, list):
+                        raise ValueError("Invalid format in backup file.")
+            except (json.JSONDecodeError, ValueError, IOError) as e:
+                print(f"Error reading backup file: {e}")
+                return
+
+            restored_count = 0
+            for token_data in backup_data:
+                access_token = token_data['access_token']
+                refresh_token = token_data.get('refresh_token', None)
+                username = token_data['username']
+
+                try:
+                    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+                    cursor = conn.cursor()
+                    cursor.execute('''
+                        INSERT INTO tokens (access_token, refresh_token, username)
+                        VALUES (%s, %s, %s)
+                    ''', (access_token, refresh_token, username))
+                    conn.commit()
+                    conn.close()
+                    restored_count += 1
+                except Exception as e:
+                    print(f"Error restoring token for {username}: {e}")
+
+            send_message_via_telegram(
+                f"📂 Backup restored successfully!\n📊 Total tokens restored: {restored_count}"
+            )
+            print(f"Database restored from backup. Total tokens restored: {restored_count}")
+        else:
+            print("No backup file found. Skipping restoration.")
