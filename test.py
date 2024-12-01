@@ -1,31 +1,7 @@
-import base64
-import hashlib
-import os
-import psycopg2
-import requests
-import time
-import json
-import random
-import string
-from flask import Flask, redirect, request, session, render_template, url_for
-from psycopg2.extras import RealDictCursor
+from app import app
 
-# Configuration: Ensure these environment variables are set correctly
-CLIENT_ID = os.getenv('CLIENT_ID')
-CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-CALLBACK_URL = os.getenv('CALLBACK_URL')
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
-WEBHOOK_URL = os.getenv('WEBHOOK_URL')
-DATABASE_URL = os.getenv('DATABASE_URL')  # Render PostgreSQL URL
-
-# Set default delay values from environment variables
-DEFAULT_MIN_DELAY = int(os.getenv("BULK_POST_MIN_DELAY", 2))
-DEFAULT_MAX_DELAY = int(os.getenv("BULK_POST_MAX_DELAY", 10))
-
-app = Flask(__name__)
-app.secret_key = os.urandom(24)
-BACKUP_FILE = 'tokens_backup.txt'
+if __name__ == '__main__':
+    app.run()
 
 # Initialize PostgreSQL database
 def init_db():
