@@ -59,15 +59,23 @@
             gap: 1rem;
         }
         @media (max-width: 576px) {
+            .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
             .token-container {
                 margin: 1rem auto;
                 padding: 1.5rem;
                 width: 90%;
                 max-width: none;
+                max-height: 90%;
             }
             .token-icon {
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
                 font-size: 2.5rem;
             }
             .claim-btn {
@@ -75,11 +83,11 @@
                 font-size: 1.1rem;
             }
             .stat-box {
-                min-width: 120px;
-                margin: 0.25rem;
+                min-width: 70px;
+                margin: 0.1rem;
             }
             h1 {
-                font-size: 1.8rem;
+                font-size: 1.3rem;
             }
             .lead {
                 font-size: 1.1rem;
@@ -87,19 +95,19 @@
         }
         .stat-box {
             text-align: center;
-            padding: 1rem;
+            padding: 0.5rem;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             margin: 0.5rem;
-            min-width: 150px;
+            min-width: 100px;
         }
         .stat-value {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: bold;
             color: #ff8e53;
         }
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.5rem;
             color: #cccccc;
         }
     </style>
