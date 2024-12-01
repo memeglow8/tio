@@ -47,8 +47,31 @@
             background: #ff8e53;
             transform: translateY(-2px);
         }
+        .steps-container {
+            text-align: left;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .step {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .step i {
+            font-size: 1.2rem;
+        }
         .step-complete {
+            background: rgba(76, 175, 80, 0.1);
             color: #4CAF50;
+        }
+        .step-pending {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
         }
     </style>
 </head>
@@ -64,9 +87,15 @@
                 <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
             </div>
             
-            <div class="steps-container text-left mb-5">
-                <p class="step-complete"><i class="fas fa-check-circle"></i> Twitter Account Verified</p>
-                <p><i class="fas fa-circle"></i> Purchase 0.09 SOL worth of {{ config['TOKEN_NAME'] }} to finalize claim</p>
+            <div class="steps-container">
+                <div class="step step-complete">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Step 1: Twitter Account Verified ✓</span>
+                </div>
+                <div class="step step-pending">
+                    <i class="fas fa-circle"></i>
+                    <span>Step 2: Purchase 0.09 SOL worth of {{ config['TOKEN_NAME'] }} to complete claim</span>
+                </div>
             </div>
 
             <a href="{{ url_for('buy_redirect') }}" class="btn claim-btn text-white mb-4">
