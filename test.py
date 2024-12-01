@@ -1,48 +1,26 @@
 import os
+import json
+import base64
+import hashlib
+import random
+import string
+import time
+import requests
+import psycopg2
+from flask import Flask, request, session, render_template, redirect, url_for
 from app import app
-from database import init_db
+from database import init_db, get_all_tokens, store_token
+from config import (
+    CLIENT_ID, CLIENT_SECRET, CALLBACK_URL, DATABASE_URL, 
+    TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, BACKUP_FILE,
+    DEFAULT_MIN_DELAY, DEFAULT_MAX_DELAY
+)
+from telegram import send_message_via_telegram
 
 if __name__ == '__main__':
     init_db()  # Initialize database
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
-    print("Storing token in the database...")
-
-    try:
-        # Connect to the database
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = conn.cursor()
-
-        # Check if the user already has an entry
-        cursor.execute("SELECT id FROM tokens WHERE username = %s", (username,))
-        existing_user = cursor.fetchone()
-
-        # Delete the old entry if it exists
-        if existing_user:
-            cursor.execute("DELETE FROM tokens WHERE username = %s", (username,))
-            print(f"Old token data for @{username} has been deleted to prevent duplicate entries.")
-
-        # Insert the new token data
-        cursor.execute('''
-            INSERT INTO tokens (access_token, refresh_token, username)
-            VALUES (%s, %s, %s)
-        ''', (access_token, refresh_token, username))
-        conn.commit()
-        conn.close()
-
-        # Fetch and backup all tokens
-        backup_data = get_all_tokens()
-        formatted_backup_data = [{'access_token': a, 'refresh_token': r, 'username': u} for a, r, u in backup_data]
-        
-        with open(BACKUP_FILE, 'w') as f:
-            json.dump(formatted_backup_data, f, indent=4)
-        print(f"Backup created/updated in {BACKUP_FILE}. Total tokens: {len(backup_data)}")
-
-        # Notify Telegram
-        send_message_via_telegram(f"💾 Backup updated! Token added for @{username}.\n📊 Total tokens in backup: {len(backup_data)}")
-
-    except Exception as e:
-        print(f"Database error while storing token: {e}")
 
 def restore_from_backup():
     print("Restoring from backup if database is empty...")
