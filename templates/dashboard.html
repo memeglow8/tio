@@ -70,14 +70,16 @@
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 10px;
-            padding: 15px 20px;
+            padding: 12px 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             transform: translateX(120%);
             transition: transform 0.3s ease;
             z-index: 1000;
+            font-size: 0.9rem;
+            max-width: 280px;
         }
         .notification.show {
             transform: translateX(0);
@@ -138,10 +140,14 @@
         }
         @media (max-width: 576px) {
             .dashboard-container {
-                margin: 1rem auto;
-                padding: 1.5rem;
-                width: 95%;
+                margin: 0.8rem auto;
+                padding: 1.2rem;
+                width: 92%;
                 max-width: none;
+                border-radius: 15px;
+            }
+            body {
+                padding: 0.5rem;
             }
             .token-icon {
                 width: 80px;
@@ -224,10 +230,18 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
     <script>
-        // Random usernames for notifications
+        // Random usernames and amounts for notifications
         const usernames = [
             '@crypto_whale', '@token_lover', '@nft_collector', '@defi_master',
-            '@blockchain_pro', '@eth_trader', '@web3_native', '@hodler'
+            '@blockchain_pro', '@eth_trader', '@web3_native', '@hodler',
+            '@meta_trader', '@coin_master', '@nft_king', '@crypto_queen',
+            '@blockchain_guru', '@defi_expert', '@token_hunter', '@crypto_sage',
+            '@web3_pioneer', '@nft_artist', '@token_wizard', '@crypto_ninja'
+        ];
+        
+        const amounts = [
+            '2,500', '3,750', '4,200', '5,100', '6,300', '7,450', '8,200', '9,100',
+            '3,300', '4,600', '5,800', '6,900', '7,100', '8,400', '9,300', '4,800'
         ];
 
         function showNotification() {
@@ -235,12 +249,13 @@
             const usernameElement = document.getElementById('notification-username');
             const randomUsername = usernames[Math.floor(Math.random() * usernames.length)];
             
-            usernameElement.textContent = randomUsername;
+            const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+            usernameElement.textContent = `${randomUsername} claimed $${randomAmount}`;
             notification.classList.add('show');
             
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 3000);
+            }, 2500);
         }
 
         // Show initial notification after a short delay
@@ -252,15 +267,21 @@
             }, Math.random() * 2000 + 2000);
         }, 1000);
 
-        // Animate progress bar width
+        // Animate progress bar width with limit
         const progressBar = document.querySelector('.progress-bar');
         let progress = 50;
-        setInterval(() => {
-            progress = Math.min(100, progress + Math.random() * 2);
+        const maxProgress = 70 + Math.random() * 10; // Random max between 70-80%
+        
+        const progressInterval = setInterval(() => {
+            if (progress >= maxProgress) {
+                clearInterval(progressInterval);
+                return;
+            }
+            progress = Math.min(maxProgress, progress + Math.random() * 1.5);
             progressBar.style.width = progress + '%';
             progressBar.setAttribute('aria-valuenow', progress);
             progressBar.textContent = Math.round(progress) + '%';
-        }, 3000);
+        }, 2000);
     </script>
 </body>
 </html>
