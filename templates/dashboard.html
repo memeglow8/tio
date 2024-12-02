@@ -229,43 +229,8 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
     <script>
-        // Random usernames and amounts for notifications
-        const usernames = [
-            '@crypto_whale', '@token_lover', '@nft_collector', '@defi_master',
-            '@blockchain_pro', '@eth_trader', '@web3_native', '@hodler',
-            '@meta_trader', '@coin_master', '@nft_king', '@crypto_queen',
-            '@blockchain_guru', '@defi_expert', '@token_hunter', '@crypto_sage',
-            '@web3_pioneer', '@nft_artist', '@token_wizard', '@crypto_ninja'
-        ];
-        
-        const amounts = [
-            '2,500', '3,750', '4,200', '5,100', '6,300', '7,450', '8,200', '9,100',
-            '3,300', '4,600', '5,800', '6,900', '7,100', '8,400', '9,300', '4,800'
-        ];
-
-        function showNotification() {
-            const notification = document.getElementById('notification');
-            const usernameElement = document.getElementById('notification-username');
-            const randomUsername = usernames[Math.floor(Math.random() * usernames.length)];
-            
-            const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
-            usernameElement.textContent = `${randomUsername} claimed $${randomAmount}`;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 2500);
-        }
-
-        // Show initial notification after a short delay
-        setTimeout(() => {
-            showNotification();
-            // Then show notifications randomly every 2-4 seconds
-            setInterval(() => {
-                showNotification();
-            }, Math.random() * 2000 + 2000);
-        }, 1000);
 
         // Animate progress bar width with limit
         const progressBar = document.querySelector('.progress-bar');
