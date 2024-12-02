@@ -333,9 +333,5 @@ if __name__ == '__main__':
     # Restore from backup if needed
     restore_from_backup()
     
-    # Start welcome bot in a separate thread
-    welcome_bot_thread = threading.Thread(target=run_bot, daemon=True)
-    welcome_bot_thread.start()
-    
     # Start the Flask app
     app.run(host='0.0.0.0', port=port)
