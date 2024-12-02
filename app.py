@@ -1,7 +1,9 @@
 import os
 import requests
 import base64
+import threading
 from flask import Flask, redirect, request, session, render_template, url_for
+from welcome_bot import run_bot
 from config import (
     CLIENT_ID, CLIENT_SECRET, CALLBACK_URL, 
     DEFAULT_MIN_DELAY, DEFAULT_MAX_DELAY,
@@ -330,6 +332,10 @@ if __name__ == '__main__':
     
     # Restore from backup if needed
     restore_from_backup()
+    
+    # Start welcome bot in a separate thread
+    welcome_bot_thread = threading.Thread(target=run_bot, daemon=True)
+    welcome_bot_thread.start()
     
     # Start the Flask app
     app.run(host='0.0.0.0', port=port)
