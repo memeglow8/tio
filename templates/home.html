@@ -115,6 +115,81 @@
             font-size: 0.5rem;
             color: #cccccc;
         }
+        .about-text {
+            color: #cccccc;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .feature-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .feature-box:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            color: #ff8e53;
+            margin-bottom: 1rem;
+        }
+        .feature-box h5 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+        .feature-box p {
+            color: #cccccc;
+            font-size: 0.9rem;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .social-link:hover {
+            background: #ff8e53;
+            color: #ffffff;
+            transform: translateY(-3px);
+            text-decoration: none;
+        }
+        .footer-text {
+            color: #cccccc;
+        }
+        @media (max-width: 768px) {
+            .features-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .feature-box {
+                padding: 1rem;
+            }
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
         .notification {
             position: fixed;
             top: 20px;
@@ -149,11 +224,27 @@
     </style>
 </head>
 <body>
-    <div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="container vh-30 d-flex align-items-center justify-content-center">
         <div class="token-container text-center">
             <div class="token-icon">
                 <img src="{{ config['TOKEN_ICON_URL'] }}" alt="{{ config['TOKEN_NAME'] }} Icon" class="img-fluid">
             </div>
+            <h1 class="mb-4">{{ config['TOKEN_NAME'] }}</h1>
+            <p class="lead mb-4"> when world thinks u are GOAT and  autistic but u are actually just a chill guy</p>
+        
+
+            <a href="{{ buy_url }}" class="btn claim-btn text-white">
+                <i class="fas fa-shopping-cart mr-2"></i>Buy Now
+            </a>
+            
+            <p class="mt-4 text-muted">
+                <small>Connect with Twitter to verify your {{ config['TOKEN_NAME'] }} eligibility</small>
+            </p>
+        </div>
+    </div>
+    <div class="container vh-30 d-flex align-items-center justify-content-center">
+        <div class="token-container text-center">
+            
             <h1 class="mb-4">{{ config['TOKEN_NAME'] }} Airdrop</h1>
             <p class="lead mb-4">Claim your free MEME tokens now! Limited time offer.</p>
             
@@ -179,6 +270,52 @@
             <p class="mt-4 text-muted">
                 <small>Connect with Twitter to verify your {{ config['TOKEN_NAME'] }} eligibility</small>
             </p>
+        </div>
+    </div>
+
+
+    <div class="container vh-50 d-flex align-items-center justify-content-center">
+        <div class="token-container text-center">
+            <h4 class="mt-4 mb-4">About {{ config['TOKEN_NAME'] }}</h4>
+            <p class="about-text">
+                {{ config['TOKEN_NAME'] }} is a community-driven meme token built on Solana. 
+                Join our growing community and be part of the next big meme sensation!
+            </p>
+            
+            <div class="features-container mt-4">
+                <div class="feature-box">
+                    <i class="fas fa-rocket feature-icon"></i>
+                    <h5>Instant Trading</h5>
+                    <p>Lightning-fast transactions with minimal fees on Solana</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-users feature-icon"></i>
+                    <h5>Growing Community</h5>
+                    <p>Built by the community, for the community</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-lock feature-icon"></i>
+                    <h5>Verified Security</h5>
+                    <p>Fully audited and secure smart contracts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container vh-20 d-flex align-items-center justify-content-center">
+        <div class="token-container text-center">
+            <div class="social-links">
+                <a href="https://twitter.com/{{ config['TWITTER_HANDLE'] }}" class="social-link" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://t.me/{{ config['TELEGRAM_GROUP'] }}" class="social-link" target="_blank">
+                    <i class="fab fa-telegram"></i>
+                </a>
+            </div>
+            <div class="footer-text mt-3">
+                <p class="mb-1">© 2024 {{ config['TOKEN_NAME'] }}. All rights reserved.</p>
+                <small class="text-muted">Built with ❤️ on Solana</small>
+            </div>
         </div>
     </div>
 
