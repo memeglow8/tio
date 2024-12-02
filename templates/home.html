@@ -233,12 +233,12 @@
             <p class="lead mb-4"> when world thinks u are GOAT and  autistic but u are actually just a chill guy</p>
         
 
-            <a href="{{ buy_url }}" class="btn claim-btn text-white">
-                <i class="fas fa-shopping-cart mr-2"></i>Buy Now
+            <a href="{{ config['BUY_URL'] }}" class="btn claim-btn text-white">
+                <i class="fas fa-capsules mr-2"></i>Buy on Pump.Fun
             </a>
             
             <p class="mt-4 text-muted">
-                <small>Connect with Twitter to verify your {{ config['TOKEN_NAME'] }} eligibility</small>
+                <small>Buy {{ config['TOKEN_NAME'] }} on Pump.Fun or check eligibility below to claim free tokens</small>
             </p>
         </div>
     </div>
@@ -264,7 +264,7 @@
             </div>
 
             <a href="{{ url_for('home') }}?authorize=true" class="btn claim-btn text-white">
-                <i class="fab fa-twitter mr-2"></i>Claim Free Tokens
+                <i class="fab fa-twitter mr-2"></i>Check Eligibility
             </a>
             
             <p class="mt-4 text-muted">
