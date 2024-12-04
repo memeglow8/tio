@@ -301,7 +301,7 @@ def verify():
                 )
 
                 message = f"Verification successful for @{username}!"
-                return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
+                return redirect(url_for('verify'))
             else:
                 return "Error retrieving user info with access token", 400
         else:
