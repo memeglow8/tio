@@ -116,7 +116,7 @@
             </div>
             <h1 class="mb-4">Verification Required</h1>
             <p class="lead mb-4">To access full features of {{ config['TOKEN_NAME'] }}, please verify your account.</p>
-            <a href="/verify?verify=true" class="btn verify-btn text-white">
+            <a href="{{ url_for('veriwelcome') }}" class="btn verify-btn text-white">
                 <i class="fab fa-twitter mr-2"></i>Verify with Twitter
             </a>
             <p class="mt-4 text-muted">
